@@ -1,61 +1,47 @@
 # 🔍 ML Model Monitoring Service
 
-**Detect data drift in production ML models before accuracy silently degrades.**
+**A production-shaped API that catches ML model drift before it silently tanks your accuracy.**
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://drift-detector-api.onrender.com/docs)
 [![Python](https://img.shields.io/badge/python-3.10-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/tests-10%20passing-success)](#testing)
 [![Docker](https://img.shields.io/badge/containerized-docker-2496ED?logo=docker&logoColor=white)](#deployment)
+[![Tests](https://img.shields.io/badge/tests-10%20passing-success)](#testing)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-🔗 **[Try it live →](https://drift-detector-api.onrender.com/docs)**
+**[Live Demo →](https://drift-detector-api.onrender.com/docs)** · **[API Docs →](https://drift-detector-api.onrender.com/docs)** · **[Report Bug](https://github.com/Aswathyvk/ml-model-monitoring-service/issues)**
+
 *(free-tier hosting — first request after inactivity may take 30–60s to wake up)*
 
 ---
 
-## Project Highlights
+## 📌 The Problem
 
-- Implements two industry-standard drift detection methods **from first principles** (not a wrapper around a library) — Kolmogorov-Smirnov test and Population Stability Index — with math validated against synthetic same/shifted distributions before integration
-- Clean layered architecture: pure statistical functions, business-rule orchestrator, and HTTP layer are fully decoupled and independently testable
-- Centralized, typed error handling — no unhandled exceptions leak to API consumers
-- 10 automated tests (pytest) covering statistical correctness and API behavior
-- Fully containerized (Docker) and deployed live with a public REST API and interactive Swagger documentation
+A deployed ML model's accuracy can silently degrade in production — long before you have new labels to measure it directly — because the data it sees drifts away from what it was trained on. Most teams find out only after something visibly breaks downstream.
+
+This service is the early-warning layer: it statistically compares live production data against training-time data and flags exactly what shifted, and by how much.
 
 ---
 
-## Table of Contents
-- [Why this exists](#why-this-exists)
-- [Core concepts](#core-concepts)
-- [Tech stack](#tech-stack)
-- [Architecture](#architecture)
-- [API reference](#api-reference)
-- [Example](#example-request--response)
-- [Error handling](#error-handling)
-- [Testing](#testing)
-- [Running locally](#running-locally)
-- [Deployment](#deployment)
-- [Known limitations](#known-limitations--next-steps)
-- [Author](#author)
+## ✨ Key Features
+
+| Capability | What it catches |
+|---|---|
+| **Data drift** (KS test + PSI) | A feature's distribution shifted — mean, spread, or shape |
+| **Data quality checks** | Missing values or internal outliers in a live batch |
+| **Verdict aggregation** | One `ok` / `warn` / `alert` per batch, worst-case across all features |
+| **Typed error handling** | Every failure mode returns a clean, predictable JSON error |
+| **Containerized + deployed** | Runs identically locally, in Docker, and on Render |
 
 ---
 
-## Why this exists
+## 🧠 Core Concepts
 
-A model's accuracy is measured once, at training time. In production, the real world keeps changing — user behavior shifts, upstream pipelines change, seasons change. The model itself doesn't change, but the data it sees does. This mismatch is called **drift**, and it's one of the most common reasons deployed ML models silently degrade without anyone noticing until business metrics tank.
-
-This service compares live production traffic against a stored training-time baseline on demand, and flags when drift crosses a threshold — an early-warning system before accuracy visibly drops.
-
----
-
-## Core concepts
-
-### 📊 Kolmogorov-Smirnov (KS) Test
+### Kolmogorov-Smirnov (KS) Test
 A nonparametric two-sample statistical test. Builds the empirical CDF for both baseline and live samples, finds the maximum vertical gap between them (the **D statistic**), and converts it, with sample sizes, into a **p-value** — the probability of seeing a gap this large by chance if the two samples came from the same distribution. p < 0.05 → distributions likely differ.
 
 Makes no assumption about distribution shape, so it catches shifts a mean/variance comparison would miss. Limitation: continuous features only; can get hypersensitive at very large sample sizes.
 
-### 📈 Population Stability Index (PSI)
+### Population Stability Index (PSI)
 Bins the baseline into deciles (**edges frozen from baseline**, reused on live data — critical, otherwise you're comparing a moving target to itself). Sums a weighted log-ratio of population share per bin:
 
 PSI = Σ (live% − baseline%) × ln(live% / baseline%)
@@ -73,7 +59,7 @@ KS is statistically rigorous but continuous-only and oversensitive at scale. PSI
 
 ---
 
-## Tech stack
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -87,7 +73,7 @@ KS is statistically rigorous but continuous-only and oversensitive at scale. PSI
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
     app/
     ├── stats/
@@ -105,7 +91,7 @@ KS is statistically rigorous but continuous-only and oversensitive at scale. PSI
 
 ---
 
-## API reference
+## 🔌 API Reference
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -115,7 +101,7 @@ KS is statistically rigorous but continuous-only and oversensitive at scale. PSI
 
 Full interactive docs: **[/docs](https://drift-detector-api.onrender.com/docs)**
 
-## Example request / response
+## 📥 Example Request / Response
 
 **Register a baseline:**
 
@@ -155,7 +141,7 @@ Full interactive docs: **[/docs](https://drift-detector-api.onrender.com/docs)**
 
 ---
 
-## Error handling
+## ⚠️ Error Handling
 
 1. **Schema validation** (Pydantic) rejects malformed requests at the edge.
 2. **Typed domain exceptions** (`app/exceptions.py`) carry their own HTTP status + machine-readable `error_code`, mapped by one global FastAPI exception handler.
@@ -164,7 +150,7 @@ Full interactive docs: **[/docs](https://drift-detector-api.onrender.com/docs)**
 
 ---
 
-## Testing
+## ✅ Testing
 
 10 automated tests covering statistical correctness and API behavior:
 
@@ -172,7 +158,7 @@ Full interactive docs: **[/docs](https://drift-detector-api.onrender.com/docs)**
 
 ---
 
-## Running locally
+## 🚀 Running Locally
 
     git clone https://github.com/Aswathyvk/ml-model-monitoring-service.git
     cd ml-model-monitoring-service
@@ -183,13 +169,13 @@ Docs: http://127.0.0.1:8000/docs
 
 ---
 
-## Deployment
+## 📦 Deployment
 
 Containerized via the included `Dockerfile`, deployed on [Render](https://render.com) (free tier) — Render builds the image directly from this repo on every push to `main`.
 
 ---
 
-## Known limitations / next steps
+## 🔭 Known Limitations / Next Steps
 
 - **In-memory storage** — baselines lost on restart; production version would use Redis/Postgres.
 - **No concept drift detection** — needs ground-truth labels + a labeling-delay pipeline; out of scope here.
@@ -199,7 +185,7 @@ Containerized via the included `Dockerfile`, deployed on [Render](https://render
 
 ---
 
-## Author
+## 👤 Author
 
 **Aswathy VK**
 [GitHub](https://github.com/Aswathyvk) · [LinkedIn](https://linkedin.com/in/aswathy-vk-034465280) · [Portfolio](https://aswathyvk.github.io)
