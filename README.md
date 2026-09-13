@@ -8,7 +8,7 @@
 [![Tests](https://img.shields.io/badge/tests-10%20passing-success)](#testing)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
-**[Live Demo →](https://drift-detector-api.onrender.com/docs)** · **[API Docs →](https://drift-detector-api.onrender.com/docs)** · **[Report Bug](https://github.com/Aswathyvk/ml-model-monitoring-service/issues)**
+**[Live Demo →](https://drift-detector-api.onrender.com/docs)** · **[API Docs →](https://drift-detector-api.onrender.com/docs)** · **[Report Bug](https://github.com/Aswathyvk/drift-sentinel/issues)**
 
 *(free-tier hosting — first request after inactivity may take 30–60s to wake up)*
 
@@ -160,8 +160,8 @@ Full interactive docs: **[/docs](https://drift-detector-api.onrender.com/docs)**
 
 ## 🚀 Running Locally
 
-    git clone https://github.com/Aswathyvk/ml-model-monitoring-service.git
-    cd ml-model-monitoring-service
+    git clone https://github.com/Aswathyvk/drift-sentinel.git
+    cd drift-sentinel
     pip install -r requirements.txt
     uvicorn main:app --reload
 
