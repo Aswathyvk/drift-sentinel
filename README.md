@@ -6,16 +6,28 @@
 [![Python](https://img.shields.io/badge/python-3.10-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Tests](https://img.shields.io/badge/tests-10%20passing-success)](#testing)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey)](#)
+[![Docker](https://img.shields.io/badge/containerized-docker-2496ED?logo=docker&logoColor=white)](#deployment)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
 🔗 **[Try it live →](https://drift-detector-api.onrender.com/docs)**
 *(free-tier hosting — first request after inactivity may take 30–60s to wake up)*
 
 ---
 
+## Project Highlights
+
+- Implements two industry-standard drift detection methods **from first principles** (not a wrapper around a library) — Kolmogorov-Smirnov test and Population Stability Index — with math validated against synthetic same/shifted distributions before integration
+- Clean layered architecture: pure statistical functions, business-rule orchestrator, and HTTP layer are fully decoupled and independently testable
+- Centralized, typed error handling — no unhandled exceptions leak to API consumers
+- 10 automated tests (pytest) covering statistical correctness and API behavior
+- Fully containerized (Docker) and deployed live with a public REST API and interactive Swagger documentation
+
+---
+
 ## Table of Contents
 - [Why this exists](#why-this-exists)
 - [Core concepts](#core-concepts)
+- [Tech stack](#tech-stack)
 - [Architecture](#architecture)
 - [API reference](#api-reference)
 - [Example](#example-request--response)
@@ -24,6 +36,7 @@
 - [Running locally](#running-locally)
 - [Deployment](#deployment)
 - [Known limitations](#known-limitations--next-steps)
+- [Author](#author)
 
 ---
 
@@ -61,6 +74,8 @@ Bins the baseline into deciles (**edges frozen from baseline**, reused on
 live data — critical, otherwise you're comparing a moving target to
 itself). Sums a weighted log-ratio of population share per bin:
 
+
+
 | PSI value | Meaning |
 |:---:|---|
 | **< 0.10** | ✅ Stable — no meaningful shift |
@@ -77,6 +92,20 @@ bin boundaries. Running both covers each one's blind spot.
 
 ---
 
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| API framework | FastAPI |
+| Validation | Pydantic / pydantic-settings |
+| Statistics | NumPy, SciPy |
+| Testing | pytest |
+| Containerization | Docker |
+| Deployment | Render |
+| Language | Python 3.10 |
+
+---
+
 ## Architecture
 app/
 ├── stats/
@@ -89,6 +118,8 @@ app/
 └── api.py # FastAPI routes + centralized error handling
 tests/ # 10 passing unit + integration tests
 Dockerfile # containerized, deployed on Render
+
+
 
 **Design principle:** `stats/` and `monitors.py` are pure functions —
 numpy arrays in, dataclasses out, zero framework dependency — so the
@@ -206,6 +237,13 @@ push to `main`.
   call `/monitor` periodically in a real deployment.
 - **No history/dashboarding** — stores baselines, not a time series of
   past monitor runs.
+
+---
+
+## Author
+
+**Aswathy VK**
+[GitHub](https://github.com/Aswathyvk) · [LinkedIn](https://linkedin.com/in/aswathy-vk-034465280) · [Portfolio](https://aswathyvk.github.io)
 
 ---
 
