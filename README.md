@@ -109,15 +109,15 @@ bin boundaries. Running both covers each one's blind spot.
 ## Architecture
 app/
 ├── stats/
-│ ├── ks_test.py # KS drift statistic + p-value
-│ └── psi.py # PSI calculation (continuous + categorical)
-├── monitors.py # missing-value / outlier ratio checks
-├── drift_detector.py # orchestrates stats + monitors → verdict
-├── reference_store.py # baseline distribution storage
-├── exceptions.py # typed domain errors → HTTP status mapping
-└── api.py # FastAPI routes + centralized error handling
-tests/ # 10 passing unit + integration tests
-Dockerfile # containerized, deployed on Render
+│   ├── ks_test.py         # KS drift statistic + p-value
+│   └── psi.py              # PSI calculation (continuous + categorical)
+├── monitors.py              # missing-value / outlier ratio checks
+├── drift_detector.py        # orchestrates stats + monitors → verdict
+├── reference_store.py       # baseline distribution storage
+├── exceptions.py             # typed domain errors → HTTP status mapping
+└── api.py                   # FastAPI routes + centralized error handling
+tests/                        # 10 passing unit + integration tests
+Dockerfile                    # containerized, deployed on Render
 
 
 
