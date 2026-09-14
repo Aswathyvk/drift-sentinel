@@ -1,4 +1,4 @@
-# 🔍 ML Model Monitoring Service
+# 🔍 Drift Sentinel
 
 **A production-shaped API that catches ML model drift before it silently tanks your accuracy.**
 
